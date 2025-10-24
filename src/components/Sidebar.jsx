@@ -1,8 +1,9 @@
-import { Users, Star, Archive, Settings, Moon } from "lucide-react";
-import { useState } from "react";
+import { Users, Star, Archive, Settings, Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 
-const Sidebar = ({ currentView, setCurrentView }) => {
-  const [darkMode, setDarkMode] = useState(true);
+const Sidebar = ({ currentView, setCurrentView, isCollapsed, setIsCollapsed, onSettingsClick }) => {
+  const { isDark, toggleTheme } = useTheme();
 
   const menuItems = [
     { id: "all", label: "All Contacts", icon: Users },
@@ -11,14 +12,30 @@ const Sidebar = ({ currentView, setCurrentView }) => {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r border-neutral-800 bg-neutral-950 flex flex-col">
+    <motion.aside
+      initial={false}
+      animate={{ width: isCollapsed ? 80 : 256 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="fixed left-0 top-0 h-screen border-r border-neutral-800 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col z-20"
+    >
       {/* Logo */}
-      <div className="px-6 py-6 border-b border-neutral-800">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-            <Users className="w-5 h-5 text-white" />
+      <div className="px-6 py-6 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+              <Users className="w-5 h-5 text-white" />
+            </div>
+            {!isCollapsed && (
+              <motion.h1
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-lg font-semibold text-neutral-900 dark:text-neutral-100"
+              >
+                Tria
+              </motion.h1>
+            )}
           </div>
-          <h1 className="text-lg font-semibold text-neutral-100">Tria</h1>
         </div>
       </div>
 
@@ -31,34 +48,73 @@ const Sidebar = ({ currentView, setCurrentView }) => {
             <button
               key={item.id}
               onClick={() => setCurrentView(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ease-out mb-1 ${
+              title={isCollapsed ? item.label : ""}
+              className={`w-full flex items-center ${
+                isCollapsed ? "justify-center" : "gap-3"
+              } px-3 py-2 rounded-lg transition-all duration-200 ease-out mb-1 ${
                 isActive
-                  ? "bg-neutral-800 text-neutral-100"
-                  : "text-neutral-400 hover:bg-neutral-900/50 hover:text-neutral-200"
+                  ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                  : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200"
               }`}
             >
-              <Icon className="w-4 h-4" />
-              <span className="text-sm font-medium">{item.label}</span>
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              {!isCollapsed && (
+                <span className="text-sm font-medium">{item.label}</span>
+              )}
             </button>
           );
         })}
       </nav>
 
       {/* Bottom Actions */}
-      <div className="px-3 py-4 border-t border-neutral-800">
+      <div className="px-3 py-4 border-t border-neutral-200 dark:border-neutral-800">
         <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-400 hover:bg-neutral-900/50 hover:text-neutral-200 transition-all duration-200 ease-out mb-1"
+          onClick={toggleTheme}
+          title={isCollapsed ? "Toggle theme" : ""}
+          className={`w-full flex items-center ${
+            isCollapsed ? "justify-center" : "gap-3"
+          } px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200 transition-all duration-200 ease-out mb-1`}
         >
-          <Moon className="w-4 h-4" />
-          <span className="text-sm font-medium">Theme</span>
+          {isDark ? (
+            <Moon className="w-4 h-4 flex-shrink-0" />
+          ) : (
+            <Sun className="w-4 h-4 flex-shrink-0" />
+          )}
+          {!isCollapsed && (
+            <span className="text-sm font-medium">
+              {isDark ? "Dark" : "Light"} Mode
+            </span>
+          )}
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-400 hover:bg-neutral-900/50 hover:text-neutral-200 transition-all duration-200 ease-out">
-          <Settings className="w-4 h-4" />
-          <span className="text-sm font-medium">Settings</span>
+        <button
+          onClick={onSettingsClick}
+          title={isCollapsed ? "Settings" : ""}
+          className={`w-full flex items-center ${
+            isCollapsed ? "justify-center" : "gap-3"
+          } px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200 transition-all duration-200 ease-out mb-1`}
+        >
+          <Settings className="w-4 h-4 flex-shrink-0" />
+          {!isCollapsed && (
+            <span className="text-sm font-medium">Settings</span>
+          )}
+        </button>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className={`w-full flex items-center ${
+            isCollapsed ? "justify-center" : "gap-3"
+          } px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200 transition-all duration-200 ease-out`}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-4 h-4 flex-shrink-0" />
+          ) : (
+            <>
+              <ChevronLeft className="w-4 h-4 flex-shrink-0" />
+              <span className="text-sm font-medium">Collapse</span>
+            </>
+          )}
         </button>
       </div>
-    </aside>
+    </motion.aside>
   );
 };
 

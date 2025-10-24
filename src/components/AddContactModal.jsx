@@ -54,17 +54,17 @@ const AddContactModal = ({ isOpen, onClose }) => {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="bg-neutral-900 border border-neutral-800 rounded-lg w-full max-w-md">
+            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg w-full max-w-md">
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800">
-                <h2 className="text-lg font-semibold text-neutral-100">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800">
+                <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                   Add New Contact
                 </h2>
                 <button
                   onClick={onClose}
-                  className="p-1 hover:bg-neutral-800 rounded transition-colors"
+                  className="p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded transition-colors"
                 >
-                  <X className="w-5 h-5 text-neutral-400" />
+                  <X className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
                 </button>
               </div>
 

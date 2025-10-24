@@ -1,19 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { Toaster } from "react-hot-toast";
 import { ContactsProvider, useContacts } from "./context/ContactsContext";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import { getContacts } from "./utils/fakeApi";
 import { seedContacts } from "./utils/seedContacts";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import ContactList from "./components/ContactList";
 import AddContactModal from "./components/AddContactModal";
+import SettingsModal from "./components/SettingsModal";
 import Loader from "./components/Loader";
 
 const AppContent = () => {
   const { dispatch } = useContacts();
+  const { isDark } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentView, setCurrentView] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const searchInputRef = useRef(null);
 
@@ -33,32 +38,39 @@ const AppContent = () => {
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Focus search on '/'
-      if (e.key === "/" && !isModalOpen) {
+      if (e.key === "/" && !isModalOpen && !isSettingsOpen) {
         e.preventDefault();
         searchInputRef.current?.focus();
       }
 
       // Open modal on 'n'
-      if (e.key === "n" && !isModalOpen && document.activeElement.tagName !== "INPUT") {
+      if (e.key === "n" && !isModalOpen && !isSettingsOpen && document.activeElement.tagName !== "INPUT") {
         e.preventDefault();
         setIsModalOpen(true);
       }
 
       // Close modal on 'Escape'
-      if (e.key === "Escape" && isModalOpen) {
-        setIsModalOpen(false);
+      if (e.key === "Escape") {
+        if (isModalOpen) setIsModalOpen(false);
+        if (isSettingsOpen) setIsSettingsOpen(false);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isModalOpen]);
+  }, [isModalOpen, isSettingsOpen]);
 
   return (
-    <div className="min-h-screen bg-neutral-950">
-      <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-200">
+      <Sidebar
+        currentView={currentView}
+        setCurrentView={setCurrentView}
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+        onSettingsClick={() => setIsSettingsOpen(true)}
+      />
 
-      <div className="ml-64">
+      <div className={`transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-64'}`}>
         <Header
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -80,12 +92,18 @@ const AppContent = () => {
         onClose={() => setIsModalOpen(false)}
       />
 
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+
       <Toaster
         toastOptions={{
+          className: '',
           style: {
-            background: "#171717",
-            color: "#e5e5e5",
-            border: "1px solid #262626",
+            background: isDark ? "#171717" : "#ffffff",
+            color: isDark ? "#e5e5e5" : "#171717",
+            border: isDark ? "1px solid #262626" : "1px solid #e5e5e5",
           },
         }}
       />
@@ -95,9 +113,11 @@ const AppContent = () => {
 
 function App() {
   return (
-    <ContactsProvider>
-      <AppContent />
-    </ContactsProvider>
+    <ThemeProvider>
+      <ContactsProvider>
+        <AppContent />
+      </ContactsProvider>
+    </ThemeProvider>
   );
 }
 

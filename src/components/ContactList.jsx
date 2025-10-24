@@ -29,12 +29,12 @@ const ContactList = ({ searchTerm, currentView }) => {
   return (
     <div className="px-6 py-6">
       <div className="mb-4">
-        <h2 className="text-lg font-semibold text-neutral-100">
+        <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
           {currentView === "all" && "All Contacts"}
           {currentView === "favorites" && "Favorite Contacts"}
           {currentView === "archived" && "Archived Contacts"}
         </h2>
-        <p className="text-sm text-neutral-500 mt-1">
+        <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-1">
           {filteredContacts.length} contact{filteredContacts.length !== 1 ? "s" : ""}
         </p>
       </div>
