@@ -72,7 +72,7 @@ const AppContent = () => {
         onSettingsClick={() => setIsSettingsOpen(true)}
       />
 
-      <div className={`transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-64'}`}>
+      <div className={`transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-64'} border-l border-neutral-200 dark:border-neutral-800`}>
         <Header
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}

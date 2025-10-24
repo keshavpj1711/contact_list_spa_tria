@@ -15,7 +15,7 @@ const Sidebar = ({ currentView, setCurrentView, isCollapsed, setIsCollapsed, onS
       initial={false}
       animate={{ width: isCollapsed ? 80 : 256 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed left-0 top-0 h-screen border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col z-20"
+      className="fixed left-0 top-0 h-screen bg-white dark:bg-neutral-950 flex flex-col z-20"
     >
       {/* Logo and Collapse Button */}
       <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
