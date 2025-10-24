@@ -3,12 +3,12 @@ import { useDebounce } from "../hooks/useDebounce";
 import ContactCard from "./ContactCard";
 import EmptyState from "./EmptyState";
 
-const ContactList = ({ searchTerm, currentView }) => {
+const ContactList = ({ searchTerm, currentView, sortOrder, viewMode }) => {
   const { contacts } = useContacts();
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   // Filter contacts based on search and current view
-  const filteredContacts = contacts.filter((contact) => {
+  let filteredContacts = contacts.filter((contact) => {
     const matchesSearch =
       contact.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
       contact.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
@@ -19,6 +19,17 @@ const ContactList = ({ searchTerm, currentView }) => {
       (currentView === "favorites" && contact.favorite);
 
     return matchesSearch && matchesView;
+  });
+
+  // Sort contacts alphabetically
+  filteredContacts = [...filteredContacts].sort((a, b) => {
+    const nameA = a.name.toLowerCase();
+    const nameB = b.name.toLowerCase();
+    if (sortOrder === "asc") {
+      return nameA.localeCompare(nameB);
+    } else {
+      return nameB.localeCompare(nameA);
+    }
   });
 
   if (filteredContacts.length === 0) {
@@ -37,11 +48,20 @@ const ContactList = ({ searchTerm, currentView }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredContacts.map((contact, index) => (
-          <ContactCard key={contact.id} contact={contact} index={index} />
-        ))}
-      </div>
+      {/* Grid or List View */}
+      {viewMode === "grid" ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredContacts.map((contact, index) => (
+            <ContactCard key={contact.id} contact={contact} index={index} viewMode="grid" />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {filteredContacts.map((contact, index) => (
+            <ContactCard key={contact.id} contact={contact} index={index} viewMode="list" />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

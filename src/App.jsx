@@ -20,6 +20,8 @@ const AppContent = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [viewMode, setViewMode] = useState("grid");
   const searchInputRef = useRef(null);
 
   // Load contacts on mount
@@ -76,13 +78,22 @@ const AppContent = () => {
           setSearchTerm={setSearchTerm}
           onAddContact={() => setIsModalOpen(true)}
           searchInputRef={searchInputRef}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
         />
 
         <main className="min-h-[calc(100vh-73px)]">
           {isLoading ? (
             <Loader />
           ) : (
-            <ContactList searchTerm={searchTerm} currentView={currentView} />
+            <ContactList
+              searchTerm={searchTerm}
+              currentView={currentView}
+              sortOrder={sortOrder}
+              viewMode={viewMode}
+            />
           )}
         </main>
       </div>
