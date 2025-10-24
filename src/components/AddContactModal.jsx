@@ -1,11 +1,14 @@
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { useContacts } from "../context/ContactsContext";
+import { countries } from "../utils/countries";
 import toast from "react-hot-toast";
 
 const AddContactModal = ({ isOpen, onClose }) => {
   const { dispatch } = useContacts();
+  const [selectedCountry, setSelectedCountry] = useState(countries.find(c => c.code === "+1"));
   const {
     register,
     handleSubmit,
@@ -18,7 +21,7 @@ const AddContactModal = ({ isOpen, onClose }) => {
       id: Date.now().toString(),
       name: data.name,
       email: data.email,
-      phone: data.phone,
+      phone: `${selectedCountry.code} ${data.phoneNumber}`,
       avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
         data.name
       )}`,
@@ -75,7 +78,7 @@ const AddContactModal = ({ isOpen, onClose }) => {
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-sm font-medium text-neutral-300 mb-1"
+                      className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                     >
                       Name
                     </label>
@@ -89,7 +92,7 @@ const AddContactModal = ({ isOpen, onClose }) => {
                           message: "Name must be at least 2 characters",
                         },
                       })}
-                      className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm text-neutral-900 dark:text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="John Doe"
                     />
                     {errors.name && (
@@ -103,7 +106,7 @@ const AddContactModal = ({ isOpen, onClose }) => {
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-sm font-medium text-neutral-300 mb-1"
+                      className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                     >
                       Email
                     </label>
@@ -117,7 +120,7 @@ const AddContactModal = ({ isOpen, onClose }) => {
                           message: "Invalid email address",
                         },
                       })}
-                      className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm text-neutral-900 dark:text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="john.doe@example.com"
                     />
                     {errors.email && (
@@ -130,38 +133,57 @@ const AddContactModal = ({ isOpen, onClose }) => {
                   {/* Phone Field */}
                   <div>
                     <label
-                      htmlFor="phone"
-                      className="block text-sm font-medium text-neutral-300 mb-1"
+                      htmlFor="phoneNumber"
+                      className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                     >
                       Phone
                     </label>
-                    <input
-                      id="phone"
-                      type="tel"
-                      {...register("phone", {
-                        required: "Phone is required",
-                        pattern: {
-                          value: /^[+]?[\d\s()-]+$/,
-                          message: "Invalid phone number",
-                        },
-                      })}
-                      className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="+1 555 123 4567"
-                    />
-                    {errors.phone && (
+                    <div className="flex gap-2">
+                      {/* Country Code Selector */}
+                      <select
+                        value={selectedCountry.code}
+                        onChange={(e) => {
+                          const country = countries.find(c => c.code === e.target.value);
+                          setSelectedCountry(country);
+                        }}
+                        className="w-32 px-3 py-2 bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm text-neutral-900 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        {countries.map((country) => (
+                          <option key={`${country.code}-${country.name}`} value={country.code}>
+                            {country.flag} {country.code}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Phone Number Input */}
+                      <input
+                        id="phoneNumber"
+                        type="tel"
+                        {...register("phoneNumber", {
+                          required: "Phone number is required",
+                          pattern: {
+                            value: /^[\d\s()-]+$/,
+                            message: "Invalid phone number",
+                          },
+                        })}
+                        className="flex-1 px-3 py-2 bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm text-neutral-900 dark:text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="555 123 4567"
+                      />
+                    </div>
+                    {errors.phoneNumber && (
                       <p className="mt-1 text-xs text-red-500">
-                        {errors.phone.message}
+                        {errors.phoneNumber.message}
                       </p>
                     )}
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-3 mt-6 pt-4 border-t border-neutral-800">
+                <div className="flex gap-3 mt-6 pt-4 border-t border-neutral-200 dark:border-neutral-800">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex-1 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 rounded-lg text-sm font-medium transition-colors"
+                    className="flex-1 px-4 py-2 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-900 dark:text-neutral-200 rounded-lg text-sm font-medium transition-colors"
                   >
                     Cancel
                   </button>
