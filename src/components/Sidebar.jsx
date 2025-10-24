@@ -18,7 +18,7 @@ const Sidebar = ({ currentView, setCurrentView, isCollapsed, setIsCollapsed, onS
       className="fixed left-0 top-0 h-screen bg-white dark:bg-neutral-950 flex flex-col z-20"
     >
       {/* Logo and Collapse Button */}
-      <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+      <div className="px-6 py-5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
             <Users className="w-5 h-5 text-white" />
