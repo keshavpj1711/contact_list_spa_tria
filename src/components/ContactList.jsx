@@ -16,8 +16,7 @@ const ContactList = ({ searchTerm, currentView }) => {
 
     const matchesView =
       currentView === "all" ||
-      (currentView === "favorites" && contact.favorite) ||
-      (currentView === "archived" && contact.archived);
+      (currentView === "favorites" && contact.favorite);
 
     return matchesSearch && matchesView;
   });
@@ -32,7 +31,6 @@ const ContactList = ({ searchTerm, currentView }) => {
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
           {currentView === "all" && "All Contacts"}
           {currentView === "favorites" && "Favorite Contacts"}
-          {currentView === "archived" && "Archived Contacts"}
         </h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-1">
           {filteredContacts.length} contact{filteredContacts.length !== 1 ? "s" : ""}

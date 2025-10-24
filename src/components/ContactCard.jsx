@@ -41,23 +41,31 @@ const ContactCard = ({ contact, index }) => {
         />
 
         {/* Contact Info */}
-        <div className="flex-1 min-w-0 pr-10">
+        <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate">
               {contact.name}
             </h3>
-            <button
-              onClick={handleToggleFavorite}
-              className="flex-shrink-0 p-1 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded transition-colors"
-            >
-              <Star
-                className={`w-4 h-4 ${
-                  contact.favorite
-                    ? "fill-yellow-500 text-yellow-500"
-                    : "text-neutral-400 dark:text-neutral-500"
-                }`}
-              />
-            </button>
+            <div className="flex flex-col gap-1 flex-shrink-0">
+              <button
+                onClick={handleToggleFavorite}
+                className="p-1 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded transition-colors"
+              >
+                <Star
+                  className={`w-4 h-4 ${
+                    contact.favorite
+                      ? "fill-yellow-500 text-yellow-500"
+                      : "text-neutral-400 dark:text-neutral-500"
+                  }`}
+                />
+              </button>
+              <button
+                onClick={handleDelete}
+                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/10 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded transition-all"
+              >
+                <Trash2 className="w-4 h-4 text-red-500" />
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1">
@@ -72,14 +80,6 @@ const ContactCard = ({ contact, index }) => {
           </div>
         </div>
       </div>
-
-      {/* Delete Button (shows on hover) */}
-      <button
-        onClick={handleDelete}
-        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-500/10 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded transition-all"
-      >
-        <Trash2 className="w-4 h-4 text-red-500" />
-      </button>
     </motion.div>
   );
 };

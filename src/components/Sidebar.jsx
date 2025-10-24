@@ -1,4 +1,4 @@
-import { Users, Star, Archive, Settings, Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Star, Settings, Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
 
@@ -8,7 +8,6 @@ const Sidebar = ({ currentView, setCurrentView, isCollapsed, setIsCollapsed, onS
   const menuItems = [
     { id: "all", label: "All Contacts", icon: Users },
     { id: "favorites", label: "Favorites", icon: Star },
-    { id: "archived", label: "Archived", icon: Archive },
   ];
 
   return (
@@ -16,27 +15,36 @@ const Sidebar = ({ currentView, setCurrentView, isCollapsed, setIsCollapsed, onS
       initial={false}
       animate={{ width: isCollapsed ? 80 : 256 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed left-0 top-0 h-screen border-r border-neutral-800 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col z-20"
+      className="fixed left-0 top-0 h-screen border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col z-20"
     >
-      {/* Logo */}
-      <div className="px-6 py-6 border-b border-neutral-200 dark:border-neutral-800">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-              <Users className="w-5 h-5 text-white" />
-            </div>
-            {!isCollapsed && (
-              <motion.h1
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-lg font-semibold text-neutral-900 dark:text-neutral-100"
-              >
-                Tria
-              </motion.h1>
-            )}
+      {/* Logo and Collapse Button */}
+      <div className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+            <Users className="w-5 h-5 text-white" />
           </div>
+          {!isCollapsed && (
+            <motion.h1
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-lg font-semibold text-neutral-900 dark:text-neutral-100"
+            >
+              Tria
+            </motion.h1>
+          )}
         </div>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="p-1.5 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200 transition-all duration-200"
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
+        </button>
       </div>
 
       {/* Menu Items */}
@@ -91,26 +99,11 @@ const Sidebar = ({ currentView, setCurrentView, isCollapsed, setIsCollapsed, onS
           title={isCollapsed ? "Settings" : ""}
           className={`w-full flex items-center ${
             isCollapsed ? "justify-center" : "gap-3"
-          } px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200 transition-all duration-200 ease-out mb-1`}
+          } px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200 transition-all duration-200 ease-out`}
         >
           <Settings className="w-4 h-4 flex-shrink-0" />
           {!isCollapsed && (
             <span className="text-sm font-medium">Settings</span>
-          )}
-        </button>
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className={`w-full flex items-center ${
-            isCollapsed ? "justify-center" : "gap-3"
-          } px-3 py-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 hover:text-neutral-900 dark:hover:text-neutral-200 transition-all duration-200 ease-out`}
-        >
-          {isCollapsed ? (
-            <ChevronRight className="w-4 h-4 flex-shrink-0" />
-          ) : (
-            <>
-              <ChevronLeft className="w-4 h-4 flex-shrink-0" />
-              <span className="text-sm font-medium">Collapse</span>
-            </>
           )}
         </button>
       </div>
